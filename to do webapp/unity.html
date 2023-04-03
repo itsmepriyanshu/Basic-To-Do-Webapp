@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To-Do List WebApp</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #92eb1e;
+			margin: 0;
+			padding: 0;
+		}
+
+		h1 {
+			text-align: center;
+			color: #f01398;
+			margin-top: 20px;
+		}
+
+		form {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-top: 20px;
+		}
+
+		input[type="text"] {
+			padding: 10px;
+			margin-top: 10px;
+			font-size: 16px;
+			border-radius: 5px;
+			border: none;
+		}
+
+		input[type="submit"] {
+			padding: 10px 20px;
+			margin-top: 10px;
+			background-color: #111102;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		ul {
+			list-style-type: none;
+			margin-top: 20px;
+			padding: 0;
+		}
+
+		li {
+			background-color: #fff;
+			padding: 10px;
+			margin-bottom: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-radius: 5px;
+			box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+		}
+
+		li.completed {
+			background-color: #d1ffd1;
+			text-decoration: line-through;
+			color: #333;
+		}
+
+		input[type="checkbox"] {
+			margin-right: 10px;
+			cursor: pointer;
+		}
+
+		button {
+			background-color: #ff3333;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button.clear {
+			background-color: #333;
+		}
+
+	</style>
+</head>
+<body>
+	<h1>To-Do List WebApp</h1>
+    <form>
+        <label for="task">Add Task:</label>
+        <input type="text" id="task" placeholder="Enter task...">
+        <input type="submit" value="Add Task">
+    </form>
+    <ul id="task-list">
+        
+    </ul>
+    <div>
+        <h2>Completed Tasks:</h2>
+        <ul id="completed-tasks">
+            
+        </ul>
+        <button id="delete-completed-tasks">Delete Completed Tasks</button>
+        <button id="clear-all-tasks" class="clear">Clear All Tasks</button>
+    </div>
+    
+    <script>
+        const taskList = document.querySelector('#task-list');
+        const completedTasksList = document.querySelector('#completed-tasks');
+        const deleteCompletedTasksButton = document.querySelector('#delete-completed-tasks');
+        const clearAllTasksButton = document.querySelector('#clear-all-tasks');
+        const tasks = [];
+    
+        function addTaskToList(task) {
+            const listItem = document.createElement('li');
+            const checkbox = document.createElement('input');
+            const taskName = document.createElement('span');
+            const deleteButton = document.createElement('button');
+            checkbox.type = 'checkbox';
+            taskName.textContent = task;
+            deleteButton.textContent = 'Delete';
+            listItem.appendChild(checkbox);
+            listItem.appendChild(taskName);
+            listItem.appendChild(deleteButton);
+            taskList.appendChild(listItem);
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    listItem.classList.add('completed');
+                    completedTasksList.appendChild(listItem);
+                } else {
+                    listItem.classList.remove('completed');
+                    taskList.appendChild(listItem);
+                }
+            });
+            deleteButton.addEventListener('click', () => {
+                const index = tasks.indexOf(task);
+                tasks.splice(index, 1);
+                listItem.remove();
+            });
+        }
+    
+        function addTask() {
+            const taskInput = document.querySelector('#task');
+            const task = taskInput.value;
+            if (task.trim() === '') {
+                alert('Task cannot be empty.');
+                return;
+            }
+            tasks.push(task);
+            addTaskToList(task);
+            taskInput.value = '';
+        }
+    
+        function deleteCompletedTasks() {
+            const completedTasks = document.querySelectorAll('.completed');
+            completedTasks.forEach(task => task.remove());
+        }
+    
+        function clearAllTasks() {
+            taskList.innerHTML = '';
+            completedTasksList.innerHTML = '';
+            tasks.length = 0;
+        }
+    
+        document.querySelector('form').addEventListener('submit', e => {
+            e.preventDefault();
+            addTask();
+        });
+    
+        deleteCompletedTasksButton.addEventListener('click', () => {
+            deleteCompletedTasks();
+        });
+    
+        clearAllTasksButton.addEventListener('click', () => {
+            clearAllTasks();
+        });
+    
+    </script>
+    </body>
+    </html>
+
+ 
